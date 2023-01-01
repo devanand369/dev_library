@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if form.errors %}
+    <p>Your username or password was incorrect. Try again.</p>
+{% endif %}
+
+{% comment %} Situations: --- User logged in but no access
+            --- User not logged in {% endcomment %}
+
+{% if next %}
+        {% if user.is_authenticated %}
+            <p>You don't have permission for this page.</p>
+        {% endif %}
+        {% else %}
+            <p>Please login to see this page.</p>
+{% endif %}
+
+<form class='form-group' method="POST" action="{% url 'login' %}">
+    {% csrf_token %}
+    {{form.username.label_tag}}
+    {{form.username}}
+
+    {{form.password.label_tag}}
+    {{form.password}}
+    
+    <input class='form-control mb-5' type="submit" value='login'>
+    <input class='form-control' type="hidden" name='next' value="{{next}}">
+</form>
+
+{% endblock %}
